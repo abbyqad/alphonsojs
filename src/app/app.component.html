@@ -1,0 +1,398 @@
+<header
+  class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow fixed-top"
+  data-bs-theme="dark"
+>
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#"
+    >RADA - Rapid Application Development Accelerator</a
+  >
+
+  <ul class="navbar-nav flex-row d-md-none">
+    <li class="nav-item text-nowrap">
+      <button
+        class="nav-link px-3 text-white"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSearch"
+        aria-controls="navbarSearch"
+        aria-expanded="false"
+        aria-label="Toggle search"
+      >
+        <svg class="bi"><use xlink:href="#search"></use></svg>
+      </button>
+    </li>
+    <li class="nav-item text-nowrap">
+      <button
+        class="nav-link px-3 text-white"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebarMenu"
+        aria-controls="sidebarMenu"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <svg class="bi"><use xlink:href="#list"></use></svg>
+      </button>
+    </li>
+  </ul>
+
+  <div id="navbarSearch" class="navbar-search w-100 collapse">
+    <input
+      class="form-control w-100 rounded-0 border-0"
+      type="text"
+      placeholder="Search"
+      aria-label="Search"
+    />
+  </div>
+</header>
+<div id="div3" class="container-lg mt-3 getSource pb-3">
+  <pre id="sourceHtml"></pre>
+  <button (click)="getSource()" class="btn btn-primary">Get Source</button>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 my-3 text-end">
+      <button (click)="removeLastAddedElement()" class="btn btn-primary">
+        Remove last added element
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div
+      id="leftPanel"
+      style="height: 500px; overflow: scroll"
+      class="col-3 leftPanel"
+      (drop)="parentDrop($event)"
+    >
+      <!-- Column 1 -->
+      <div>
+        <div
+          class="baseMinHeight borderDotted mb-3 position-relative"
+          id="parentSingleColumn"
+          (drop)="drop($event)"
+          (dragover)="allowDrop($event)"
+          (dragstart)="dragStart($event)"
+          draggable="true"
+        >
+          <div class="row">
+            <div class="col-12"></div>
+          </div>
+          <div class="utilitySection">
+            <i class="bi bi-trash-fill delete"></i>
+          </div>
+        </div>
+      </div>
+      <!-- Column 2 -->
+
+      <div
+        class="mb-2 borderDotted position-relative"
+        id="parentDoubleColum"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <div class="row baseMinHeight">
+          <div class="col-6 borderDotted"></div>
+          <div class="col-6 borderDotted"></div>
+        </div>
+        <div class="utilitySection">
+          <i class="bi bi-trash-fill delete"></i>
+        </div>
+      </div>
+      <!-- Column 4 -->
+
+      <div
+        class="mb-2 borderDotted position-relative"
+        id="parentQuadrupleColum"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <div class="row baseMinHeight">
+          <div class="col-3 col-lg-3 borderDotted addCssClass">
+            <div class="utilitySection">
+              <i class="bi bi-trash-fill delete"></i>
+              <i class="bi bi-badge-cc-fill cssClass"></i>
+            </div>
+          </div>
+          <div class="col-3 col-lg-3 borderDotted"></div>
+          <div class="col-3 col-lg-3 borderDotted"></div>
+          <div class="col-3 col-lg-3 borderDotted"></div>
+        </div>
+        <div class="utilitySection">
+          <i class="bi bi-trash-fill delete"></i>
+          <i class="bi bi-badge-cc-fill cssClass"></i>
+        </div>
+      </div>
+       
+      <!-- Page Title -->
+      <div
+        class="borderDotted position-relative mb-2"
+        id="parentPageTitle"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <div class="row">
+          <div class="col-7">
+            <div
+              class="d-inline-block pageTitle me-3 py-3"
+              contenteditable="true"
+            >
+              Page Title
+            </div>
+            <div class="d-inline-block">20 items</div>
+          </div>
+          <div class="col-5">
+            <div class="d-inline-block">
+              <button class="btn btn-primary" contenteditable="true">
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="utilitySection">
+          <i class="bi bi-trash-fill delete"></i>
+        </div>
+      </div>
+      <!-- Button -->
+
+      <div class="mb-2">
+        <div class="d-inline-block borderDotted position-relative">
+          <button
+            class="btn btn-primary"
+            contenteditable="true"
+            id="parentButtonElement"
+            (drop)="drop($event)"
+            (dragover)="allowDrop($event)"
+            (dragstart)="dragStart($event)"
+            draggable="true"
+          >
+            Button
+          </button>
+          <div class="utilitySection">
+            <i class="bi bi-trash-fill delete"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkbox Primeng -->
+      <div class="mb-2">
+        <div class="d-inline-block borderDotted position-relative">
+          <span
+            id="parentPrimeNgCheckboxElementAtom"
+            (drop)="drop($event)"
+            (dragover)="allowDrop($event)"
+            (dragstart)="dragStart($event)"
+            draggable="true"
+          >
+            <span>
+              <p-checkbox [binary]="true" inputId="binary"></p-checkbox>
+            </span>
+            <label contenteditable="true">Label</label>
+          </span>
+
+          <div class="utilitySection">
+            <i class="bi bi-trash-fill delete"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Button Class -->
+
+      <div class="mb-2">
+        <div
+          class="d-inline-block borderDotted position-relative px-3"
+          id="parentButtonClassElement"
+          (drop)="drop($event)"
+          (dragover)="allowDrop($event)"
+          (dragstart)="dragStart($event)"
+          draggable="true"
+        >
+          <button class="addCssClass">Button</button>
+
+          <div class="utilitySection">
+            <i class="bi bi-trash-fill delete"></i>
+            <i class="bi bi-badge-cc-fill cssClass"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- DropDown -->
+
+      <div class="mb-2">
+        <div
+          class="d-inline-block borderDotted position-relative"
+          id="parentDropDownElementAtom"
+          (drop)="drop($event)"
+          (dragover)="allowDrop($event)"
+          (dragstart)="dragStart($event)"
+          draggable="true"
+        >
+          <mat-form-field>
+            <select matNativeControl>
+              <option value="">-Select</option>
+            </select>
+          </mat-form-field>
+          <div class="utilitySection">
+            <i class="bi bi-trash-fill delete"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Label -->
+      <div
+        class="position-relative d-inline-block"
+        id="parentLabel"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <label class="mb-3 borderDotted px-2" contenteditable="true"
+          >Label Text</label
+        >
+        <span class="utilitySection">
+          <i class="bi bi-trash-fill delete"></i>
+          <!-- <i class="bi bi-badge-cc-fill cssClass"></i> -->
+        </span>
+      </div>
+      <!-- DatePicker -->
+      <div
+        class="position-relative d-inline-block px-2"
+        id="parentDatePickerAtom"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <mat-form-field color="accent">
+          <input matInput [matDatepicker]="picker1" />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+        <div class="utilitySection">
+          <i class="bi bi-trash-fill delete"></i>
+        </div>
+      </div>
+
+      <!-- Material Button -->
+      <div
+        id="parentMatButtonAtom"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <button mat-fab extended>
+          <mat-icon contenteditable="true">home</mat-icon>
+          Home
+        </button>
+        <div class="utilitySection">
+          <i class="bi bi-trash-fill delete"></i>
+        </div>
+      </div>
+      <!-- Label + input text field -->
+      <div
+        id="parentLabelInput"
+        class="borderDotted position-relative mb-2"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <div class="row">
+          <div class="col">
+            <label for="" contenteditable="true">Editable Text</label>
+          </div>
+          <div class="col">
+            <input type="text" name="" id="" />
+          </div>
+        </div>
+        <div class="utilitySection">
+          <i class="bi bi-trash-fill delete"></i>
+        </div>
+      </div>
+      <!-- Label + dropDown text field -->
+      <div
+        id="parentLabelDropDownMolecule"
+        class="borderDotted position-relative mb-2"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <div class="row">
+          <div class="col">
+            <label for="" contenteditable="true">Editable Text</label>
+          </div>
+          <div class="col" id="matDropDownMoleCuleAtom">
+            <mat-form-field>
+              <select matNativeControl>
+                <option value="">-Select</option>
+              </select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="utilitySection">
+          <i class="bi bi-trash-fill delete"></i>
+        </div>
+      </div>
+      <!-- LAbel + datePciker -->
+      <div
+        id="parentLabelDatePickerMolecule"
+        class="borderDotted position-relative mb-2"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+        (dragstart)="dragStart($event)"
+        draggable="true"
+      >
+        <div class="row">
+          <div class="col">
+            <label for="" contenteditable="true">Editable Text</label>
+          </div>
+          <div class="col" id="matDatePickerMoleCuleAtom">
+            <mat-form-field color="accent">
+              <input matInput [matDatepicker]="picker2" />
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker2"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Right Panel -->
+    <div
+      class="col-9 rightPanel"
+      id="rightPanel"
+      (drop)="drop($event)"
+      (dragover)="allowDrop($event)"
+      (dragend)="dragEnd($event)"
+      (dragstart)="dragStart($event)"
+      style="height: 600px"
+    ></div>
+  </div>
+</div>
+
+<ng-template #dialogBox>
+  <div class="p-3">
+    <p>Enter CSS Class Name separated by space</p>
+    <input type="text" [(ngModel)]="getCssClassName" />
+    <div>
+      <mat-dialog-actions>
+        <button mat-button mat-dialog-close cdkFocusInitial>ok</button>
+      </mat-dialog-actions>
+    </div>
+  </div>
+</ng-template>

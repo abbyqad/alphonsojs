@@ -1,0 +1,284 @@
+import { Component, ViewChild } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  MatDialog,
+  MatDialogRef,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogTitle,
+  MatDialogContent,
+} from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { Data } from "./metaData";
+import { CheckboxModule } from 'primeng/checkbox';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  providers: [provideNativeDateAdapter()],
+  imports: [RouterOutlet, MatButtonModule, MatTooltip, MatIconModule, MatDialogActions, MatDialogTitle, MatDialogContent, MatDialogClose, FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule,
+    MatDatepickerModule, CheckboxModule],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
+})
+export class AppComponent {
+  @ViewChild('dialogBox') dialogBox: any;
+  // @ViewChild('getCssClassName') getCssClassName: any;
+  title = 'alphonso';
+  count = 0;
+  getCssClassName: any;
+  dropDownArr: any[] = [{ value: '-Select-', viewValue: 'Select' }];
+  latestCloneElement: string[] = [];
+  metaData = Data;
+  elementList = [
+    {
+      id: "DatePicker",
+      elementID: 'matDatePicker',
+      label: "AM DatePicker",
+      html: `<mat-form-field color="accent">
+      <input matInput [matDatepicker]="picker1" />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        
+      ></mat-datepicker-toggle>
+      <mat-datepicker></mat-datepicker>
+    </mat-form-field>`
+
+    },
+    {
+      id: "DropDown",
+      elementID: 'matDropDown',
+      label: "Drop Down",
+      html: ` <mat-form-field>
+      <select matNativeControl required>
+        <option value="">-Select</option>
+      </select>
+    </mat-form-field>`
+    },
+    {
+      id: "PrimeNgCheckbox",
+      elementID: 'PrimeNgCheckbox',
+      label: "Pirme ng",
+      html: ` <span>
+      <p-checkbox [binary]="true" inputId="binary"></p-checkbox>
+      <label contenteditable="true">Label</label>
+     </span>`
+    }
+  ]
+  historyStack: any[] = [];
+  currentIndex = -1;
+
+  constructor(public dialog: MatDialog) {
+
+  }
+  allowDrop(ev: any) {
+    // console.log(ev, ' ---- allowDrop')
+    ev.preventDefault();
+  }
+
+  dragStart(ev: any) {
+    // console.log(ev, ' ---- dragStart ----', ev.target.id)
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+
+  dragEnd(ev: any) {
+    // console.log(ev, ' ---- drag End ');
+  }
+  parentDrop(event: any) {
+    console.log(event, "parentDrop")
+  }
+
+  drop(ev: any) {
+    // console.log(ev, ' ---- drop')
+    ev.preventDefault();
+    let data = ev.dataTransfer.getData("text"); // retrieving id
+    const element = ev.target;
+    if (ev.target.id.includes('parent')) {
+      return
+    }
+    const node: any = document.getElementById(data); // accessing node
+    if (data.includes('parent')) {
+      const clone: any = this.cloneNode(node, data, ev);
+      this.deleteNode(clone);
+      this.addCssClass(clone);
+    } else {
+      ev.target.appendChild(node);
+    }
+
+  }
+
+  private cloneNode(node: any, data: any, ev: any) {
+    const clone: any = node.cloneNode(true);
+
+    clone.id = data.replace("parent", "child") + (++this.count);
+
+    this.latestCloneElement.unshift(clone.id)
+
+    // console.log(this.latestCloneElement);
+    ev.target.appendChild(clone);
+    clone.classList.add("showHideDelete");
+
+    // console.log(clone.id)
+    return clone;
+  }
+
+  removeLastAddedElement() {
+    console.log(this.latestCloneElement);
+    if (this.latestCloneElement.length) {
+      document.getElementById(this.latestCloneElement[0])?.remove();
+      this.latestCloneElement.splice(0, 1)
+    }
+  }
+
+  private deleteNode(clone: any) {
+    document.querySelector("#" + clone.id + " .delete")?.setAttribute('data-parent-id', clone.id);
+
+    document.querySelector("#" + clone.id + " .delete")?.addEventListener("click", function (obj: any) {
+
+      let parentId = "";
+      // console.log(obj);
+      for (let x in obj.target.attributes) {
+
+        if (obj.target.attributes[x].nodeName === 'data-parent-id') {
+          parentId = obj.target.attributes[x].nodeValue;
+        }
+      }
+      document.getElementById(parentId)?.remove();
+    });
+  }
+
+
+  private addCssClass(clone: any) {
+    const _self = this;
+    let dialogRef: any;
+    document.querySelector('#' + clone.id + " .cssClass")?.addEventListener("click", function (obj: any) {
+      _self.getCssClassName = "";
+      dialogRef = _self.dialog.open(_self.dialogBox, {
+        width: '250px'
+      });
+
+      dialogRef.afterClosed().subscribe((result: any) => {
+        const className = _self.getCssClassName.split(" ");
+        document.querySelector('#' + clone.id + " .addCssClass")?.classList.add(...className);
+      });
+
+
+      // console.log(document.querySelector('#' + clone.id + " .addCssClass"))
+    });
+
+  }
+
+  getSource() {
+    const sourceHtml: any = document.getElementById('sourceHtml');
+    let index: any;
+    let originalElement: any = document.getElementById('rightPanel');
+    let cloneElement = originalElement.cloneNode(true);
+    let cloneChildNodes = cloneElement.childNodes;
+    this.findChildNodes(cloneChildNodes);
+    sourceHtml.innerText = this.format(cloneElement?.innerHTML);
+  }
+
+
+
+  private findChildNodes(cloneChildNodes: any) {
+    // console.dir(cloneChildNodes)
+    cloneChildNodes.forEach((node: any, index: number) => {
+      // console.dir(node);
+      this.elementList.map((elItem: any) => {
+        if (node?.id?.includes(elItem.id) && node?.id?.includes('Atom') ||
+          node?.id?.includes(elItem.elementID) && node?.id?.includes('MoleculeAtom')) {
+          node.innerHTML = elItem.html;
+        }
+        if (node.childNodes?.length) {
+          this.findChildNodes(node.childNodes);
+        }
+      });
+      if (node.className && node.className.includes("utilitySection")) {
+        node.remove();
+      }
+      removeCssClass("borderDotted");
+      removeCssClass("baseMinHeight");
+
+      if (node.id && node.id.includes("child")) {
+        node.removeAttribute("id");
+        node.classList.remove("showHideDelete")
+        node.removeAttribute("draggable");
+
+      }
+      if (node.contenteditable) {
+        node.removeAttribute("contenteditable");
+      }
+
+
+      function removeCssClass(cssClassName: string) {
+        if (node.className && node.className.includes(cssClassName)) {
+          node.classList.remove(cssClassName);
+        }
+      }
+    })
+  }
+
+  format(html: any) {
+    let tab = '\t';
+    let result = '';
+    let indent = '';
+    // console.log(html)
+    html.split(/>\s*</).forEach((element: any) => {
+      // console.log(el)
+      const el: any = this.removeNgContentTag(element);
+
+      const newEl = el.join(" ");
+      // console.log(newEl)
+      if (newEl.match(/^\/\w/)) {
+        indent = indent.substring(tab.length);
+      }
+      // console.log(newEl)
+      result += indent + '<' + newEl + '>\r\n';
+
+      if (newEl.match(/^<?\w[^>]*[^\/]$/) && !newEl.startsWith("input")) {
+        indent += tab;
+      }
+    });
+    // console.log(result, ' --- result', result.substring(1, result.length - 3))
+    return result.substring(1, result.length - 3);
+  }
+
+  private removeNgContentTag(element: any) {
+    const el: any = element?.split(" ");
+    // console.log(el)
+    el.map((item: any, index: any) => {
+
+      if (item.includes("_ngcontent-ng")) {
+        if (item?.includes(">")) {
+
+          item = item.split('=""');
+          item.splice(0, 1);
+
+          item = item.toString();
+          // console.log(item , ' __')
+        } else {
+          el.splice(index, 1);
+        }
+
+      }
+      // console.log(item, ' - - - item')
+      return item;
+
+    });
+    return el;
+  }
+
+
+}
+
+
+
