@@ -17,7 +17,7 @@ import {
   MatDialogContent,
 } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { Data } from "./metaData";
+
 import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
@@ -37,7 +37,7 @@ export class AppComponent {
   getCssClassName: any;
   dropDownArr: any[] = [{ value: '-Select-', viewValue: 'Select' }];
   latestCloneElement: string[] = [];
-  metaData = Data;
+  
   elementList = [
     {
       id: "DatePicker",
@@ -277,6 +277,61 @@ export class AppComponent {
     return el;
   }
 
+  saveState() {
+    // Save the current state of the document
+    let currentState: any = this.captureCurrentState();
+
+    // Clear redo history when a new action is performed
+    this.historyStack = this.historyStack.slice(0, this.currentIndex + 1);
+
+    // Add the new state to the history stack
+    this.historyStack.push(currentState);
+
+    // Update the current index
+    this.currentIndex = this.historyStack.length - 1;
+  }
+
+  undo() {
+    if (this.currentIndex > 0) {
+      // Move back in history
+      this.currentIndex--;
+      this.applyState(this.historyStack[this.currentIndex]);
+    }
+  }
+
+  redo() {
+    if (this.currentIndex < this.historyStack.length - 1) {
+      // Move forward in history
+      this.currentIndex++;
+      this.applyState(this.historyStack[this.currentIndex]);
+    }
+  }
+
+  applyState(state: any) {
+    console.log(state);
+
+    // Apply the given state to the document
+    /* code to restore the document state based on the captured state */
+  }
+
+  captureCurrentState() {
+    // Get the HTML content of the entire document
+    let documentHTML = document.documentElement.outerHTML;
+
+    // You can also capture other relevant information as needed, such as styles, form values, etc.
+    // For example, capturing the styles of a specific element with the ID "exampleElement":
+    let element: any = document?.getElementById('rightPanel');
+    let exampleElementStyles = window.getComputedStyle(element);
+
+    // Create an object to store the captured state
+    let currentState = {
+      html: documentHTML,
+      exampleElementStyles: exampleElementStyles,
+      // Add more properties as needed
+    };
+
+    return currentState;
+  }
 
 }
 
