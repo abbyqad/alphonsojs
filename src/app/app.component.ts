@@ -98,7 +98,7 @@ export class AppComponent {
   }
 
   drop(ev: any) {
-    // console.log(ev, ' ---- drop')
+    console.log(ev, ' ---- drop')
     ev.preventDefault();
     let data = ev.dataTransfer.getData("text"); // retrieving id
     const element = ev.target;

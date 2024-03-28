@@ -64,6 +64,24 @@
       class="col-3 leftPanel"
       (drop)="parentDrop($event)"
     >
+      <div>
+        Primeng Components
+
+        <ul>
+          <li>Forms</li>
+          <li>
+            <ul>
+              <li
+              id="parentAutoComplete"
+              (drop)="drop($event)"
+              (dragover)="allowDrop($event)"
+              (dragstart)="dragStart($event)"
+              draggable="true">Auto Complete</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
       <!-- Column 1 -->
       <div>
         <div
