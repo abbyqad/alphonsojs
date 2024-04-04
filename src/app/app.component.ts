@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -19,25 +19,34 @@ import {
 import { FormsModule } from '@angular/forms';
 
 import { CheckboxModule } from 'primeng/checkbox';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CalendarModule } from 'primeng/calendar';
+import { Calendar } from 'primeng/calendar';
+import { Dropdown } from 'primeng/dropdown';
+import { TestComponent } from './test/test.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [RouterOutlet, MatButtonModule, MatTooltip, MatIconModule, MatDialogActions, MatDialogTitle, MatDialogContent, MatDialogClose, FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule,
-    MatDatepickerModule, CheckboxModule],
+    MatDatepickerModule, CheckboxModule, AutoCompleteModule, CalendarModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  private viewRef = inject(ViewContainerRef);
+  private renderer = inject(Renderer2);
+  private eleRef = inject(ElementRef);
+
   @ViewChild('dialogBox') dialogBox: any;
-  // @ViewChild('getCssClassName') getCssClassName: any;
+
   title = 'alphonso';
   count = 0;
   getCssClassName: any;
   dropDownArr: any[] = [{ value: '-Select-', viewValue: 'Select' }];
   latestCloneElement: string[] = [];
-  
+
   elementList = [
     {
       id: "DatePicker",
@@ -95,40 +104,84 @@ export class AppComponent {
   }
   parentDrop(event: any) {
     console.log(event, "parentDrop")
+    event.preventDefault();
+    return
   }
 
   drop(ev: any) {
-    console.log(ev, ' ---- drop')
+    // console.log(ev, ' ---- drop');
     ev.preventDefault();
     let data = ev.dataTransfer.getData("text"); // retrieving id
+    // console.log(data, ' -- DATA');
+
     const element = ev.target;
     if (ev.target.id.includes('parent')) {
+      // console.log('YES');
       return
     }
-    const node: any = document.getElementById(data); // accessing node
+    // console.log('STEP');
+
+    let node: any = document.getElementById(data); // accessing node
+    // console.dir(node);
+    // if (node.id.includes('parentPrimeNg')) {
+    //   node = document.getElementById(data)?.childNodes[1];
+
+    // }
     if (data.includes('parent')) {
-      const clone: any = this.cloneNode(node, data, ev);
-      this.deleteNode(clone);
-      this.addCssClass(clone);
+      // console.log(node);
+
+      const clone: any = this.cloneNode(node, data, ev, false);
+      // this.deleteNode(clone);
+      // this.addCssClass(clone);
     } else {
       ev.target.appendChild(node);
     }
 
   }
 
-  private cloneNode(node: any, data: any, ev: any) {
-    const clone: any = node.cloneNode(true);
+  private cloneNode(node: any, data: any, ev: any, cloneNode: any) {
+    // console.log(ev)
 
-    clone.id = data.replace("parent", "child") + (++this.count);
+    if (cloneNode) {
+      let clone = node.cloneNode(true);
+      clone.style.display = 'block';
+      clone.id = data.replace("parent", "child") + (++this.count);
 
-    this.latestCloneElement.unshift(clone.id)
+      this.latestCloneElement.unshift(clone.id);
 
-    // console.log(this.latestCloneElement);
-    ev.target.appendChild(clone);
-    clone.classList.add("showHideDelete");
+      // console.log(this.latestCloneElement);
+      ev.target.appendChild(clone);
+      clone.classList.add("showHideDelete");
+      // console.log(clone);
+      return clone;
+    } else {
+      // console.log(node);
+      let element: any;
+      let parentEle = this.renderer.createElement('div');
+      switch (node.id) {
+        case 'parentPrimeNgCalendar':
+          element = this.viewRef.createComponent(Calendar);
+          break;
+        case 'parentPrimeNgDropdown':
+          element = this.viewRef.createComponent(Dropdown);
+          break;
+        default:
+          console.log('hi')
+      }
+      parentEle.appendChild(element.instance.el.nativeElment);
+      this.renderer.appendChild(document.getElementById('rightPanel'), parentEle);
+      // ev.target.appendChild(element);
+      // 
+      
+      
+
+      // this.renderer.appendChild(ev.target, parentEle);
+      // this.renderer.appendChild(this.eleRef.nativeElement, ev.target)
+    }
+
 
     // console.log(clone.id)
-    return clone;
+
   }
 
   removeLastAddedElement() {
@@ -137,6 +190,10 @@ export class AppComponent {
       document.getElementById(this.latestCloneElement[0])?.remove();
       this.latestCloneElement.splice(0, 1)
     }
+  }
+
+  test() {
+    console.log('HI')
   }
 
   private deleteNode(clone: any) {

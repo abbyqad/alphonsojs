@@ -58,6 +58,16 @@
     </div>
   </div>
   <div class="row">
+     <!-- Right Panel -->
+     <div
+     class="col-9 rightPanel"
+     id="rightPanel"
+     (drop)="drop($event)"
+     (dragover)="allowDrop($event)"
+     (dragend)="dragEnd($event)"
+     (dragstart)="dragStart($event)"
+     style="height: 600px"
+   ></div>  
     <div
       id="leftPanel"
       style="height: 500px; overflow: scroll"
@@ -72,11 +82,34 @@
           <li>
             <ul>
               <li
-              id="parentAutoComplete"
+              id="parentPrimeNgCalendar"
               (drop)="drop($event)"
               (dragover)="allowDrop($event)"
               (dragstart)="dragStart($event)"
-              draggable="true">Auto Complete</li>
+              draggable="true">Calendar
+               </li>
+               <li
+              id="parentPrimeNgDropdown"
+              (drop)="drop($event)"
+              (dragover)="allowDrop($event)"
+              (dragstart)="dragStart($event)"
+              draggable="true">Dropdown
+               </li>
+              <li
+                id="parentPrimeNgAutoComplete"
+                (drop)="drop($event)"
+                (dragover)="allowDrop($event)"
+                (dragstart)="dragStart($event)"
+                draggable="true"
+              >
+                Auto Complete
+                <div style="display: none">
+                  <p-autoComplete
+                     
+                  ></p-autoComplete>
+                </div>
+              </li>
+           
             </ul>
           </li>
         </ul>
@@ -390,16 +423,7 @@
         </div>
       </div>
     </div>
-    <!-- Right Panel -->
-    <div
-      class="col-9 rightPanel"
-      id="rightPanel"
-      (drop)="drop($event)"
-      (dragover)="allowDrop($event)"
-      (dragend)="dragEnd($event)"
-      (dragstart)="dragStart($event)"
-      style="height: 600px"
-    ></div>
+   
   </div>
 </div>
 
